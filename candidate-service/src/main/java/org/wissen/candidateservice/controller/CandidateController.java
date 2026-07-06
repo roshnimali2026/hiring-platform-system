@@ -1,13 +1,23 @@
 package org.wissen.candidateservice.controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.wissen.candidateservice.dto.request.RegisterCandidateRequest;
+import org.wissen.candidateservice.dto.response.ApiResponse;
+import org.wissen.candidateservice.dto.response.CandidateResponse;
+import org.wissen.candidateservice.dto.response.ResponseBuilder;
+import org.wissen.candidateservice.service.CandidateService;
 
 @RestController
-@RequestMapping("/candidate")
+@RequestMapping("/api/v1/candidates")
+@RequiredArgsConstructor
 public class CandidateController {
+
+    private final CandidateService candidateService;
 
     @Value("${server.port}")
     private String port;
@@ -18,12 +28,16 @@ public class CandidateController {
         return "Response from Candidate Instance : " + port;
     }
 
-    @Value("${eureka.instance.hostname:NOT_FOUND}")
-    private String hostname;
+    @PostMapping
+    public ResponseEntity<ApiResponse<CandidateResponse>> registerCandidate(
+            @Valid @RequestBody RegisterCandidateRequest request) {
 
-    @GetMapping("/config")
-    public String config() {
-//        System.out.println();
-        return hostname;
+        CandidateResponse response = candidateService.registerCandidate(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseBuilder.success(
+                        "Candidate registered successfully",
+                        response));
     }
+
 }

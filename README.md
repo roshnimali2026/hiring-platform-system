@@ -169,7 +169,39 @@ Responsibilities
 - Candidate Registration (Upcoming)
 - Candidate Profile (Upcoming)
 
-Current API
+Registration Flow
+
+Client
+│
+▼
+Controller
+│
+▼
+Bean Validation
+│
+▼
+Business Validation
+│
+├── Check Duplicate Email
+└── Check Duplicate Phone
+│
+▼
+Mapper
+│
+▼
+Repository
+│
+▼
+MySQL
+│
+▼
+Mapper
+│
+▼
+Response DTO
+│
+▼
+Standard API Response
 
 ```
 GET /candidate/test
